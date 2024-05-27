@@ -17,7 +17,7 @@ class ContactController extends Controller
     public function index()
     {
         return Inertia::render('Dashboard', [
-            'contacts' => Contact::select('id', 'first_name', 'last_name', 'phone_no', 'group_id')->get()              
+            'contacts' => Contact::select('id', 'first_name', 'last_name', 'phone_no', 'group_id')->get()
         ]);
     }
 
@@ -36,13 +36,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        Request::validate([
-            'first_name' => ['required', 'max:50'],
-            'last_name' => ['required', 'max:50'],
-            'phone_no'  =>  ['required'],
-        ]);    
+      
+        Contact::create(
+              $request->validate([
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+                'phone_no'  => 'required|max:10',
+            ])
+        );
 
-        return Redirect::route('dashboard')->with('success', 'Contact created.');
+        return redirect()->route('dashboard')->with('success', 'Contact created successfully!');
     }
 
     /**

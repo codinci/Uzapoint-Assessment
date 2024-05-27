@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class GroupController extends Controller
 {
@@ -12,7 +14,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
+       return Inertia::render('Group/Index');
     }
 
     /**
@@ -28,7 +30,12 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Group::create(
+            $request->validate([
+                'name' => 'required'
+            ])
+        );
+        return redirect()->route('dashboard')->with('success', 'Group created successfully!');
     }
 
     /**

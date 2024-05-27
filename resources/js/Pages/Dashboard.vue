@@ -19,7 +19,7 @@ defineProps({ contacts: Object })
                         <Link class="m-4 p-2 bg-blue-400 rounded-md" as="button" href="/dashboard/create">
                            Create Contact
                         </Link>
-                        <Link class="m-4 p-2 bg-blue-400 rounded-md" as="button" href="/groups/create">
+                        <Link class="m-4 p-2 bg-blue-400 rounded-md" as="button" href="/group">
                            Create Group
                         </Link>
                     </div>
