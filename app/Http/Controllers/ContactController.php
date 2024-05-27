@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Group;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class ContactController extends Controller
 {
@@ -12,7 +16,9 @@ class ContactController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Dashboard', [
+            'contacts' => Contact::select('id', 'first_name', 'last_name', 'phone_no', 'group_id')->get()              
+        ]);
     }
 
     /**
@@ -20,7 +26,9 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Contact/Create', [
+            'groups' => Group::select('id', 'name')->get(),
+        ]);
     }
 
     /**
@@ -28,7 +36,13 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Request::validate([
+            'first_name' => ['required', 'max:50'],
+            'last_name' => ['required', 'max:50'],
+            'phone_no'  =>  ['required'],
+        ]);    
+
+        return Redirect::route('dashboard')->with('success', 'Contact created.');
     }
 
     /**

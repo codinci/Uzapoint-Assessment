@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+defineProps({ contacts: Object })
 </script>
 
 <template>
@@ -15,8 +16,12 @@ import { Head } from '@inertiajs/vue3';
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="flex justify-end mx-4">
-                        <button class="m-4 p-2 bg-blue-400 rounded-md">Add New Contact</button>
-                        <button class="m-4 p-2 bg-blue-400 rounded-md">Create Group</button>
+                        <Link class="m-4 p-2 bg-blue-400 rounded-md" as="button" href="/dashboard/create">
+                           Create Contact
+                        </Link>
+                        <Link class="m-4 p-2 bg-blue-400 rounded-md" as="button" href="/groups/create">
+                           Create Group
+                        </Link>
                     </div>
                     <table class="table-auto w-full text-left border-collapse">
                         <thead>
