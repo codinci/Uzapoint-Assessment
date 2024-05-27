@@ -71,11 +71,6 @@ DB_PASSWORD=${password}
 php artisan migrate
 ```
 
-11. Seed the database
-```
-php artisan db:seed
-```
-
 12. Run the application
 ```
 npm run dev
