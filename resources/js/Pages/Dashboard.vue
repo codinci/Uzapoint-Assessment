@@ -1,7 +1,47 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
-defineProps({ contacts: Object })
+import Modal from '@/Components/Modal.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+
+const props = defineProps({ contacts: Object, groups: Object })
+
+
+const getGroupName = (groupId) => {
+    const group = props.groups.find(group => group.id === groupId);
+    return group ? group.name : '';
+};
+
+const contactsWithGroupNames = computed(() => {
+    return props.contacts.map(contact => ({
+        ...contact,
+        groupName: getGroupName(contact.group_id)
+    }));
+});
+
+//product deletion
+const confirmingContactDeletion = ref(false);
+const contactToDelete = ref(null);
+const form = useForm({});
+const confirmContactDeletion = (contact) => {
+    confirmingContactDeletion.value = true;
+    contactToDelete.value = contact;
+};
+const closeModal = () => {
+    confirmingContactDeletion.value = false;
+};
+
+const deleteContact = (id) => {
+    form.delete(route('contact.destroy', { id: id }), {
+        preserveScroll: true,
+        onSuccess: () => closeModal(),
+        onError: () => 'Something went wrong',
+        onFinish: () => form.reset(),
+    });
+};
+
 </script>
 
 <template>
@@ -35,33 +75,24 @@ defineProps({ contacts: Object })
                         </thead>
                         <tbody>
                             <tr
-                                v-for="contact in contacts"
+                                v-for="contact in contactsWithGroupNames"
                                 :key="contact.id"
                                 class="even:bg-gray-100"
                             >
                                 <td class="border-b py-2 px-4">{{ contact.first_name }}</td>
                                 <td class="border-b py-2 px-4">{{ contact.last_name }}</td>
                                 <td class="border-b py-2 px-4">{{ contact.phone_no }}</td>
+                                <td class="border-b py-2 px-4">{{ contact.groupName }}</td>
                                 <td class="border-b py-2 px-4">
-                                    {{ contact.group ? contact.group.name : '' }}
-                                </td>
-                                <td class="border-b py-2 px-4">
-                                    <button
-                                        @click="viewContact(contact)"
-                                        class="text-blue-500 hover:underline"
-                                    >
-                                        View
-                                    </button>
-                                    |
-                                    <button
-                                        @click="editContact(contact)"
+                                    <Link
+                                        :href="route('contact.edit', { id: contact.id })"
                                         class="text-yellow-500 hover:underline"
                                     >
                                         Edit
-                                    </button>
+                                    </Link>
                                     |
                                     <button
-                                        @click="deleteContact(contact)"
+                                       @click="confirmContactDeletion(contact)"
                                         class="text-red-500 hover:underline"
                                     >
                                         Delete
@@ -73,5 +104,23 @@ defineProps({ contacts: Object })
                 </div>
             </div>
         </div>
+          <Modal :show="confirmingContactDeletion" @close="closeModal">
+                <div class="p-6">
+                    <h2 class="text-lg font-medium text-gray-900">
+                        Are you sure you want to delete ?
+                    </h2>
+
+                    <div class="mt-6 flex justify-end">
+                        <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+
+                        <DangerButton
+                            class="ms-3"
+                            @click="deleteContact(contactToDelete.id)"
+                        >
+                            Delete Contact
+                        </DangerButton>
+                    </div>
+                </div>
+            </Modal>
     </AuthenticatedLayout>
 </template>

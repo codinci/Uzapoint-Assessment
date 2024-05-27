@@ -41,9 +41,9 @@ const form = useForm({
                 <div class="mb-4">
                     <label for="group" class="block text-gray-700 text-sm font-bold mb-2">Group:</label>
                     <div class="relative">
-                        <select id="group" v-model="form.group" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                        <select id="group" v-model="form.group_id" class="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                             <option value=""  selected>Select your group</option>
-                            <option v-for="group in groups" :value="group.group_id">{{ group.name }}</option>
+                            <option v-for="group in groups" :value="group.id">{{ group.name }}</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                             <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9 11l4-4H7z"/></svg>

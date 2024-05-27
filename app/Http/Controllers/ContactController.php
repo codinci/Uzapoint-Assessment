@@ -17,7 +17,8 @@ class ContactController extends Controller
     public function index()
     {
         return Inertia::render('Dashboard', [
-            'contacts' => Contact::select('id', 'first_name', 'last_name', 'phone_no', 'group_id')->get()
+            'contacts'  => Contact::select('id', 'first_name', 'last_name', 'phone_no', 'group_id')->get(),
+            'groups'    => Group::all()
         ]);
     }
 
@@ -36,14 +37,18 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-      
-        Contact::create(
-              $request->validate([
-                'first_name' => 'required|max:255',
-                'last_name' => 'required|max:255',
-                'phone_no'  => 'required|max:10',
-            ])
-        );
+        $request->validate([
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'phone_no'  => 'required|max:10',
+        ]);
+
+        Contact::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone_no' => $request->phone_no,
+            'group_id' => $request->group_id
+        ]);
 
         return redirect()->route('dashboard')->with('success', 'Contact created successfully!');
     }
@@ -61,7 +66,10 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+         return Inertia::render('Contact/Edit', [
+            'contact' => $contact,
+            'groups' => Group::all(),
+        ]);
     }
 
     /**
@@ -69,7 +77,20 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $request->validate([
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'phone_no'  => 'required|max:10',
+        ]);
+
+        $contact->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'phone_no' => $request->phone_no,
+            'group_id' => $request->group_id
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Contact updated successfully!');
     }
 
     /**
@@ -77,6 +98,8 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Contact deleted successfully!');
     }
 }

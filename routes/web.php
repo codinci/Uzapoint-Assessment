@@ -18,6 +18,9 @@ Route::get('/', function () {
 Route::get('/dashboard', [ContactController::class, 'index'])->name('dashboard')->middleware('auth');;
 Route::get('/dashboard/create', [ContactController::class, 'create'])->name('contact.create')->middleware('auth');
 Route::post('/dashboard/store', [ContactController::class, 'store'])->name('contact.store')->middleware('auth');
+Route::get('/dashboard/{contact}/edit', [ContactController::class, 'edit'])->name('contact.edit')->middleware('auth');
+Route::put('/dashboard/{contact}', [ContactController::class, 'update'])->name('contact.update')->middleware('auth');
+Route::delete('/dashboard/{contact}', [ContactController::class, 'destroy'])->name('contact.destroy')->middleware('auth');
 
 Route::get('/group', [GroupController::class, 'index'])->name('group.index')->middleware('auth');
 Route::post('/group', [GroupController::class, 'store'])->name('group.store')->middleware('auth');
